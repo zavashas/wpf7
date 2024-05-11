@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -17,12 +17,13 @@ namespace Messenger
 {
     public partial class ServerWindow : Window
     {
+
         private CancellationTokenSource isWorking;
         private bool isPageOpen = false;
+        DateTime date = DateTime.Now;
         public ServerWindow()
         {
             InitializeComponent();
-
             TcpServer.Server();
             isWorking = new CancellationTokenSource();
             UpdateUsers();
@@ -33,54 +34,81 @@ namespace Messenger
         {
             while (!token.IsCancellationRequested)
             {
-                var client = await TcpServer.socket.AcceptAsync();
-                ReceiveMessage(client);
+                
+                    var client = await TcpServer.socket.AcceptAsync();
+                    _ = RecieveMessage(client, token);
+                
+                
             }
         }
 
-        private async Task ReceiveMessage(Socket client)
+        private async Task RecieveMessage(Socket client, CancellationToken token)
         {
-            while (true)
+            try
             {
-                byte[] bytes = new byte[1024];
-                int bytesReceived = await client.ReceiveAsync(bytes, SocketFlags.None);
-                if (bytesReceived == 0)
+                while (!token.IsCancellationRequested)
                 {
-                    TcpServer.clients.Remove(client);
-                    UpdateUsers();
-                    string allUsers = string.Join(";", TcpServer.clients.Values);
-                    foreach (var item in TcpServer.clients)
+                    byte[] bytes = new byte[1024];
+                    int bytesRead = await client.ReceiveAsync(bytes, SocketFlags.None);
+                    if (bytesRead == 0)
                     {
-                        await TcpServer.SendUsers(item.Key, allUsers);
+                        HandleClientDisconnection(client); 
+                        return;
                     }
-                    return;
-                }
 
-                string message = Encoding.UTF8.GetString(bytes, 0, bytesReceived);
-                int action = Convert.ToInt32(message.Substring(0, 1));
-                message = message.Substring(1);
+                    string message = Encoding.UTF8.GetString(bytes, 0, bytesRead);
+                    int action = Convert.ToInt32(message.Substring(0, 1));
+                    message = message.Substring(1);
 
-                switch (action)
-                {
-                    case 0:
-                        message = message.Substring(0, message.LastIndexOf(']') + 1);
-                        TcpServer.clients.Add(client, message);
-                        UpdateUsers();
-                        TcpServer.logList.Add($"[{DateTime.Now}] \nНовый пользователь: {message} ");
-                        string allUsers = string.Join(";", TcpServer.clients.Values);
-                        foreach (var item in TcpServer.clients)
-                        {
-                            await TcpServer.SendUsers(item.Key, allUsers);
-                        }
-                        break;
-                    case 1:
-                        MessageListView.Items.Add(message);
-                        foreach (var item in TcpServer.clients)
-                        {
-                            await TcpServer.SendMessage(item.Key, message);
-                        }
-                        break;
+                    switch (action)
+                    {
+                        case 0:
+                            TcpServer.clients.Add(client, message);
+                            TcpServer.logList.Add($"[{DateTime.Now}] \nНовый пользователь: [{message}] ");
+                            UpdateUsers();
+                            BroadcastUsersList();
+                            break;
+                        case 1:
+                            MessageListView.Items.Add(message);
+                            BroadcastMessage(message);
+                            break;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                HandleClientDisconnection(client); 
+                
+            }
+        }
+
+        private void HandleClientDisconnection(Socket client)
+        {
+            if (TcpServer.clients.ContainsKey(client))
+            {
+                string username = TcpServer.clients[client];
+                TcpServer.clients.Remove(client);
+                UpdateUsers();
+                BroadcastUsersList();
+                TcpServer.logList.Add($"[{DateTime.Now}] \nПользователь {username} покинул чат");
+                client.Close();
+            }
+        }
+
+        private void BroadcastMessage(string message)
+        {
+            foreach (var item in TcpServer.clients)
+            {
+                TcpServer.SendMessage(item.Key, message);
+            }
+        }
+
+        private void BroadcastUsersList()
+        {
+            string allUsers = string.Join(";", TcpServer.clients.Values);
+            foreach (var item in TcpServer.clients)
+            {
+                TcpServer.SendUsers(item.Key, allUsers);
             }
         }
 
@@ -129,7 +157,6 @@ namespace Messenger
         {
             ExitAction();
         }
-
         private void UpdateUsers()
         {
             UsersList.Items.Clear();
