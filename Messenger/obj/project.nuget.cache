@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "pQ/T6ZyEqV7Ph0uNXj6QuckAYpUz6A84vkGIc9wddEvHDwoK7gwdFrZmjUnb+3kQhMSBOibgOB2LPMgdczFdcw==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\simaz\\source\\repos\\Messenger\\Messenger\\Messenger.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\simaz\\.nuget\\packages\\materialdesigncolors\\3.0.0\\materialdesigncolors.3.0.0.nupkg.sha512",
+    "C:\\Users\\simaz\\.nuget\\packages\\materialdesignthemes\\5.0.0\\materialdesignthemes.5.0.0.nupkg.sha512",
+    "C:\\Users\\simaz\\.nuget\\packages\\microsoft.xaml.behaviors.wpf\\1.1.39\\microsoft.xaml.behaviors.wpf.1.1.39.nupkg.sha512"
+  ],
+  "logs": []
+}

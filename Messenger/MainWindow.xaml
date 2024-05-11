@@ -1,0 +1,46 @@
+﻿<Window x:Class="Messenger.MainWindow"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Messenger"
+        mc:Ignorable="d"
+                Title="Чатик" MinHeight="400" Height="400" MinWidth="400" Width="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition MinHeight="30" Height="*" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock
+            Grid.Row="0"
+            HorizontalAlignment="Center" VerticalAlignment="Center"
+            FontSize="20"
+            Text="Добро пожаловать в сетевой чат!"/>
+        <TextBox x:Name="Name"
+            Grid.Row="1"
+            Margin="10 0 10 0" 
+            VerticalAlignment="Center"
+            Style="{StaticResource MaterialDesignFilledTextBox}"
+            AcceptsReturn="False"
+            TextWrapping="NoWrap"
+            materialDesign:HintAssist.Hint="Введите свое имя пользователя" />
+        <Button x:Name="Create"
+            Grid.Row="2" Margin="10"
+            Content="Создать новый" Click="Create_Click" />
+        <Button x:Name="Connect"
+            Grid.Row="3" Margin="10"
+            Content="Подключиться" Click="Connect_Click" />
+        <TextBox x:Name="IP"
+            Grid.Row="4"
+            Margin="10 0 10 10" 
+            VerticalAlignment="Center"
+            Style="{StaticResource MaterialDesignFilledTextBox}"
+            AcceptsReturn="False"
+            TextWrapping="NoWrap"
+            materialDesign:HintAssist.Hint="IP адрес чата" />
+    </Grid>
+</Window>

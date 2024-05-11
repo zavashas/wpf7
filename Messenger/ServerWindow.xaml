@@ -1,0 +1,52 @@
+﻿<Window x:Class="Messenger.ServerWindow"
+        TextElement.FontSize="14"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Messenger"
+        mc:Ignorable="d"
+                Title="Чатик" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock
+            Grid.Row="0" Grid.Column="0"
+            HorizontalAlignment="Center" VerticalAlignment="Center"
+            FontSize="16"
+            Text="Пользователи:"/>
+        <ListView x:Name="UsersList" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2"/>
+        <Frame x:Name="Frame" Grid.RowSpan="3" NavigationUIVisibility="Hidden"/>
+        <Button x:Name="ShowLogs"
+            Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"
+            Content="Посмотреть логи чата" Click="ShowLogs_Click" />
+        <ListView x:Name="MessageListView" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"/>
+        <Button x:Name="Send"
+            Grid.Row="2" Grid.Column="3"
+            VerticalAlignment="Bottom"
+            Height="45"
+            Content="Отправить" Click="Send_Click" />
+        <TextBox x:Name="Message"
+            Grid.Row="2" Grid.Column="2"
+            VerticalAlignment="Center"
+            Style="{StaticResource MaterialDesignFilledTextBox}"
+            AcceptsReturn="True"
+            TextWrapping="Wrap"
+            materialDesign:HintAssist.Hint="Написать сообщение..." />
+        <Button x:Name="Exit"
+            Grid.Row="2" Grid.Column="1"
+            VerticalAlignment="Bottom"
+            Height="45"
+            Content="Выйти" Click="Exit_Click" />
+    </Grid>
+</Window>
